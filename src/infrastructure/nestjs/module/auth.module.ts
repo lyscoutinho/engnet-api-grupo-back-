@@ -4,6 +4,8 @@ import {AuthController} from "../../../controllers/auth.controllers";
 import {AuthServiceImplemantation} from "../../../application/auth/auth.service";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {UserEntity} from "../../../entity/user/user.entity";
+import { JwtStrategy } from '../../../application/auth/jwt.strategy';
+import { JwtAuthGuard } from '../../../application/auth/jwt-auth.guard';
 
 
 @Module({
@@ -16,6 +18,11 @@ import {UserEntity} from "../../../entity/user/user.entity";
         }),
     ],
     controllers: [AuthController],
-    providers: [AuthServiceImplemantation],
+    providers: [
+    AuthServiceImplemantation,
+    JwtStrategy,
+    JwtAuthGuard,
+  ],
+  exports: [JwtAuthGuard],
 })
 export class AuthModule {}
