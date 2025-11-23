@@ -1,28 +1,23 @@
-import {Module} from "@nestjs/common";
-import {JwtModule} from "@nestjs/jwt";
-import {AuthController} from "../../../controllers/auth.controllers";
-import {AuthServiceImplemantation} from "../../../application/auth/auth.service";
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {UserEntity} from "../../../entity/user/user.entity";
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthController } from '../../../controllers/auth.controllers';
+import { AuthServiceImplemantation } from '../../../application/auth/auth.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '../../../entity/user/user.entity';
 import { JwtStrategy } from '../../../application/auth/jwt.strategy';
 import { JwtAuthGuard } from '../../../application/auth/jwt-auth.guard';
 
-
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([UserEntity]),
-        JwtModule.register({
-            global: true,
-            secret: 'JWT_SECRET',
-            signOptions: { expiresIn: '1000s' },
-        }),
-    ],
-    controllers: [AuthController],
-    providers: [
-    AuthServiceImplemantation,
-    JwtStrategy,
-    JwtAuthGuard,
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    JwtModule.register({
+      global: true,
+      secret: 'JWT_SECRET',
+      signOptions: { expiresIn: '1000s' },
+    }),
   ],
+  controllers: [AuthController],
+  providers: [AuthServiceImplemantation, JwtStrategy, JwtAuthGuard],
   exports: [JwtAuthGuard],
 })
 export class AuthModule {}
