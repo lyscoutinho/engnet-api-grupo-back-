@@ -16,8 +16,8 @@ export class UserService {
 
   async create(dto: CreateUserDto) {
     const user = this.userRepo.create({
-        ...dto,
-        diretoria: dto.diretoria as DiretoriaEnum,
+      ...dto,
+      diretoria: dto.diretoria as DiretoriaEnum,
     });
     user.senha = await bcrypt.hash(dto.senha, 10);
 

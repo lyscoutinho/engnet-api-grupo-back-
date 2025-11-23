@@ -18,8 +18,12 @@ export class Cliente {
   @Column()
   email: string;
 
-  @Column('simple-array')
-  telefone: string[]; // (1,n)
+  @Column()
+  telefone: string;
+
+  @Column({ nullable: false})
+  codigo: string;
+
 
   @OneToMany(() => Contrato, (contrato) => contrato.cliente)
   contratos: Contrato[];
