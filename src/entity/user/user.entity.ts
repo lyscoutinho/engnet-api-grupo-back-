@@ -20,9 +20,6 @@ export class User {
   @Column({ default: true })
   ativo: boolean;
 
-  @Column({ type: 'enum', enum: DiretoriaEnum })
-  cargo: DiretoriaEnum;
-
   // (1, n) -> contratos
   @OneToMany(() => Contrato, (contrato) => contrato.membro)
   contratos: Contrato[];
@@ -30,4 +27,11 @@ export class User {
   // (1, n) -> reembolsos
   @OneToMany(() => Reembolso, (reembolso) => reembolso.user)
   reembolsos: Reembolso[];
+
+  @Column({
+    type: 'enum',
+    enum: DiretoriaEnum,
+    nullable: false,
+  })
+  diretoria: DiretoriaEnum;
 }
