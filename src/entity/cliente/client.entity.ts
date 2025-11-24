@@ -1,5 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Contrato } from '../contrato/contrato.entity';
+import { StatusClient } from '../enums/status-client';
 
 @Entity('clientes')
 export class Cliente {
@@ -9,22 +17,37 @@ export class Cliente {
   @Column()
   nome: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   cpf: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   cnpj: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
   telefone: string;
 
-  @Column({ nullable: false})
+  @Column({ nullable: false })
   codigo: string;
 
+  @Column({
+    type: 'enum',
+    enum: StatusClient,
+    default: StatusClient.NOVO,
+  })
+  status: StatusClient;
 
-  @OneToMany(() => Contrato, (contrato) => contrato.cliente)
+  @CreateDateColumn()
+  criadoEm: Date;
+
+  @UpdateDateColumn()
+  atualizadoEm: Date;
+
+  // (1,n) -> Contratos - Um cliente pode ter vários contratos
+  @OneToMany(() => Contrato, (contrato) => contrato.cliente, {
+    cascade: true,
+  })
   contratos: Contrato[];
 }
