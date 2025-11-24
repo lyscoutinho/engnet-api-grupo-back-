@@ -1,6 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { User } from '../user/user.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Contrato } from '../contrato/contrato.entity';
+import { User } from '../user/user.entity'; 
+import { Relatorio } from '../relatorios/relatorio.entity';
+import { StatusReembolso } from '../enums/status-reembolso';
 
 @Entity('reembolsos')
 export class Reembolso {
@@ -8,23 +19,49 @@ export class Reembolso {
   id: string;
 
   @Column()
-  data: Date;
-
-  @Column('decimal')
-  valor: number;
-
-  @Column()
   descricao: string;
 
-  @Column({ default: false })
-  recusa: boolean;
-
+  // Novo campo solicitado
   @Column()
-  status: string;
+  categoria: string;
 
-  @ManyToOne(() => User, (user) => user.reembolsos)
-  user: User;
+  @Column('decimal', { precision: 10, scale: 2 })
+  valor: number;
 
-  @ManyToOne(() => Contrato, (contrato) => contrato.reembolsos)
+  @Column({ nullable: true })
+  observacoes: string;
+
+  // Novo campo de Status
+  @Column({
+    type: 'enum',
+    enum: StatusReembolso,
+    default: StatusReembolso.PENDENTE,
+  })
+  status: StatusReembolso;
+
+  @CreateDateColumn()
+  criadoEm: Date;
+
+  @UpdateDateColumn()
+  atualizadoEm: Date;
+
+  // MUDANÇA: (N,1) -> Muitos reembolsos para Um contrato
+  @ManyToOne(() => Contrato, (contrato) => contrato.reembolso, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'contrato_id' })
   contrato: Contrato;
+
+  // NOVO: (N,1) -> Muitos reembolsos para Um solicitante (User)
+  @ManyToOne(() => User, (user) => user.reembolsos, {
+    nullable: false,
+  })
+  @JoinColumn({ name: 'solicitante_id' })
+  solicitante: User;
+
+  @OneToMany(() => Relatorio, (relatorio) => relatorio.reembolso, {
+    cascade: true,
+  })
+  relatorios: Relatorio[];
 }

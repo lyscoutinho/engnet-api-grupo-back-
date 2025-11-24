@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany } from 'typeorm';
 import { DiretoriaEnum } from '../enums/diretoria';
 import { Contrato } from '../contrato/contrato.entity';
 import { Reembolso } from '../reembolso/reembolso.entity';
+
 
 @Entity('users')
 export class User {
@@ -21,12 +22,8 @@ export class User {
   ativo: boolean;
 
   // (1, n) -> contratos
-  @OneToMany(() => Contrato, (contrato) => contrato.membro)
+  @ManyToMany(() => Contrato, (contrato) => contrato.membros)
   contratos: Contrato[];
-
-  // (1, n) -> reembolsos
-  @OneToMany(() => Reembolso, (reembolso) => reembolso.user)
-  reembolsos: Reembolso[];
 
   @Column({
     type: 'enum',
@@ -34,4 +31,7 @@ export class User {
     nullable: false,
   })
   diretoria: DiretoriaEnum;
+
+  @OneToMany(()=> Reembolso, (reembolso) => reembolso.solicitante)
+  reembolsos: Reembolso[];
 }

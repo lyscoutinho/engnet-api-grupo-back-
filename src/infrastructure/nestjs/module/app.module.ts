@@ -5,12 +5,18 @@ import databaseConfig from '../config/database.config';
 import { AuthModule } from './auth.module';
 import { UsersModule } from './users.module';
 import { ClientsModule } from './clients.module';
+import { ContratosModule } from './contratos.module';
+import { ReembolsosModule } from './reembolsos.module';
+import { DashboardModule } from './dashboard.module';
 
 @Module({
   imports: [
     AuthModule,
     UsersModule,
     ClientsModule,
+    ContratosModule,
+    ReembolsosModule,
+    DashboardModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig],
