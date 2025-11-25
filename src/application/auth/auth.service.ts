@@ -13,7 +13,7 @@ export class AuthServiceImplemantation {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async login(login: LogindDto): Promise<LoginResponse> {
     const user = await this.userRepository.findOne({
@@ -40,6 +40,12 @@ export class AuthServiceImplemantation {
 
     return {
       accessToken: await this.jwtService.signAsync(payload),
+      user: {
+        id: user.id,
+        name: user.nome,
+        email: user.email,
+        role: user.diretoria,
+      },
     };
   }
 }
